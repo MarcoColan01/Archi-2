@@ -5,6 +5,7 @@
 	ins: .asciiz "Inserisci l'elemento: "
 	m: .asciiz "Minimo: " 
 	M: .asciiz "Massimo: "
+	sp: .asciiz " "
 	
 	
 .text
@@ -40,14 +41,25 @@ avanti:
 	la $a0 vet 
 	move $a1 $s0
 	jal minimo
-	li $v0 1
 	move $a0 $v0
+	li $v0 1
+	syscall
+	
+	li $v0 4
+	la $a0 sp
+	syscall 
+	
+	la $a0 vet 
+	move $a1 $s0
+	jal massimo
+	move $a0 $v0
+	li $v0 1
 	syscall
 	li $v0 10
 	syscall
 	
 minimo:
-	move $t0 $v0
+	move $t0 $a0
 	lw $t1($t0)	#t1 = elemento minimo
 	li $t2 1
 	
@@ -63,6 +75,27 @@ c1:
 scambioMin:
 	move $t1 $t3
 	j c1	
+	
+	
+	
+massimo:
+	move $t0 $a0
+	lw $t1($t0)	#t1 = elemento massimo
+	li $t2 1
+	
+ricercaMax:
+
+	addi $t0 $t0 4
+	lw $t3($t0)
+	bgt $t3 $t1 scambioMax
+c2:
+	beq $t2 $a1 torna
+	addi $t2 $t2 1 
+	j ricercaMax
+	
+scambioMax:
+	move $t1 $t3
+	j c2
 	
 torna:
 	move $v0 $t1
